@@ -1,0 +1,99 @@
+# Modified sc25-workshop.yml
+# Fixes:
+# - Removed the ondemand module, as it appears not to exist in the HPC Toolkit repository (causing the file not found error).
+# - Instead, add manual installation steps for Open OnDemand in the post-deploy workflow.
+# - For G2 machines, no accelerator settings needed; Slurm detects L4 GPUs automatically.
+# - Kept 1TB sharedfs without tier (defaults to BASIC_HDD for compatibility).
+# Modified sc25-workshop.yml
+# Fixes:
+# - Changed partition_name from "static-gpu" to "staticgpu" and "dynamic-gpu" to "dynamicgpu" to match regex '^[a-z](?:[a-z0-9]*)$' (no hyphens).
+# - No OOD module; install manually post-deploy as before.
+# - G2 machines handle L4 GPUs implicitly.
+
+---
+
+blueprint_name: sc25-slurm-gpu
+
+vars:
+  project_id:  ## Set GCP Project ID Here ##
+  deployment_name: sc25-workshop
+  region: us-central1
+  zone: us-central1-a
+
+deployment_groups:
+- group: primary
+  modules:
+  - id: network
+    source: modules/network/vpc
+
+  - id: private_service_access
+    source: community/modules/network/private-service-access
+    use: [network]
+
+  - id: homefs
+    source: modules/file-system/filestore
+    use: [network, private_service_access]
+    settings:
+      local_mount: /home
+
+  - id: sharedfs
+    source: modules/file-system/filestore
+    use: [network, private_service_access]
+    settings:
+      local_mount: /shared
+      size_gb: 1024  # 1TB
+
+  - id: static_gpu_nodeset
+    source: community/modules/compute/schedmd-slurm-gcp-v6-nodeset
+    use: [network]
+    settings:
+      node_count_static: 2
+      node_count_dynamic_max: 0  # Static only
+      machine_type: g2-standard-4
+      bandwidth_tier: gvnic_enabled
+      allow_automatic_updates: false
+
+  - id: static_gpu_partition
+    source: community/modules/compute/schedmd-slurm-gcp-v6-partition
+    use:
+    - static_gpu_nodeset
+    settings:
+      partition_name: staticgpu
+      exclusive: false  # Allows nodes to stay up after jobs
+
+  - id: dynamic_gpu_nodeset
+    source: community/modules/compute/schedmd-slurm-gcp-v6-nodeset
+    use: [network]
+    settings:
+      node_count_static: 0
+      node_count_dynamic_max: 2  # Autoscaling max
+      machine_type: g2-standard-4
+      bandwidth_tier: gvnic_enabled
+      allow_automatic_updates: false
+
+  - id: dynamic_gpu_partition
+    source: community/modules/compute/schedmd-slurm-gcp-v6-partition
+    use:
+    - dynamic_gpu_nodeset
+    settings:
+      partition_name: dynamicgpu
+      exclusive: false
+
+  - id: slurm_login
+    source: community/modules/scheduler/schedmd-slurm-gcp-v6-login
+    use: [network]
+    settings:
+      machine_type: n2-standard-4
+      enable_login_public_ips: true
+
+  - id: slurm_controller
+    source: community/modules/scheduler/schedmd-slurm-gcp-v6-controller
+    use:
+    - network
+    - static_gpu_partition
+    - dynamic_gpu_partition
+    - homefs
+    - sharedfs
+    - slurm_login
+    settings:
+      enable_controller_public_ips: true
