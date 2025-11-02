@@ -23,7 +23,7 @@ deployment_groups:
       subnetwork_name: default
       omit_external_ip: false  # Need internet to download packages
       use_iap: false
-      shell_script: |
+      startup_script: |
         #!/bin/bash
         set -xeuo pipefail
 
