@@ -24,7 +24,7 @@ deployment_groups:
       omit_external_ip: false  # Need internet to download packages
       use_iap: false
       shell_scripts:
-      - $(ghpc_stage("install-software.sh"))
+      - /home/jpblaschke/nersc-sc25/install-software.sh
 
 # Deploy cluster with custom image
 - group: primary
