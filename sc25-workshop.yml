@@ -12,7 +12,7 @@ vars:
 
 # Deployment groups - defines the sequence and dependencies of infrastructure components
 deployment_groups:
-- group: images
+- group: packer
   modules:
   - id: custom_image
     source: modules/packer/custom-image
@@ -22,9 +22,8 @@ deployment_groups:
       source_image_project_id: [schedmd-slurm-public]
       image_family: sc25-workshop-slurm
       disk_size: 50
-      state_timeout: "15m"
       shell_scripts:
-      - install-software.sh  # Your installation script
+      - install-software.sh
 
 - group: primary  # Logical grouping of all modules in this deployment
   modules:
@@ -95,10 +94,13 @@ deployment_groups:
   # Slurm login nodes - provides user access point to the cluster
   - id: slurm_login
     source: community/modules/scheduler/schedmd-slurm-gcp-v6-login  # Login node module
-    use: [network, custom_image]  # Network dependency
+    use: [network]  # Network dependency
     settings:
       machine_type: n2-standard-4  # General-purpose N2 instance (4 vCPUs, 16GB RAM)
       enable_login_public_ips: true  # Public IP for SSH access from outside GCP
+      instance_image:
+        family: sc25-workshop-slurm  # Reference the image family
+        project: nersc-sc25-demo      # Your project ID
 
   # Slurm controller - central Slurm management and scheduling service
   - id: slurm_controller
