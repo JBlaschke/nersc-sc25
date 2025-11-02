@@ -56,8 +56,6 @@ deployment_groups:
         firewall-cmd --reload 2>/dev/null || true
 
         echo "Open OnDemand installation complete!"
-        EOF
-
 
 # Deploy cluster with custom image
 - group: primary
