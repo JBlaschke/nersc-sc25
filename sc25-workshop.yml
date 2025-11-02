@@ -1,17 +1,13 @@
-# Modified sc25-workshop.yml
----
-# Blueprint metadata - defines the name of this deployment blueprint
 blueprint_name: sc25-slurm-gpu
 
-# Global variables section - configuration that applies across the deployment
 vars:
-  project_id:  ## Set GCP Project ID Here ##  # GCP project ID where resources will be deployed
-  deployment_name: sc25-workshop  # Unique name for this deployment instance
-  region: us-central1  # GCP region for resource placement (central US)
-  zone: us-central1-a  # Specific availability zone within the region
+  project_id: nersc-sc25-demo
+  deployment_name: sc25-workshop
+  region: us-central1
+  zone: us-central1-a
 
-# Deployment groups - defines the sequence and dependencies of infrastructure components
 deployment_groups:
+# Build custom image
 - group: packer
   modules:
   - id: custom_image
@@ -22,95 +18,94 @@ deployment_groups:
       source_image_project_id: [schedmd-slurm-public]
       image_family: sc25-workshop-slurm
       disk_size: 50
+      zone: $(vars.zone)
+      # Use default VPC for building the image
+      subnetwork_name: default
+      omit_external_ip: false  # Need internet to download packages
+      use_iap: false
       shell_scripts:
       - install-software.sh
 
-- group: primary  # Logical grouping of all modules in this deployment
+# Deploy cluster with custom image
+- group: primary
   modules:
-  # Network module - creates the Virtual Private Cloud (VPC) network
   - id: network
-    source: modules/network/vpc  # Official HPC Toolkit module for VPC creation
+    source: modules/network/vpc
 
-  # Private Service Access - enables private connectivity to Google APIs/services
   - id: private_service_access
-    source: community/modules/network/private-service-access  # Community module for private Google API access
-    use: [network]  # Depends on the network module being deployed first
+    source: community/modules/network/private-service-access
+    use: [network]
 
-  # Home filesystem - creates Filestore for user home directories
   - id: homefs
-    source: modules/file-system/filestore  # Official Filestore module
-    use: [network, private_service_access]  # Requires network and private access
+    source: modules/file-system/filestore
+    use: [network, private_service_access]
     settings:
-      local_mount: /home  # Mount point on compute nodes for user home directories
+      local_mount: /home
 
-  # Shared filesystem - creates additional Filestore for shared data
   - id: sharedfs
-    source: modules/file-system/filestore  # Same Filestore module as homefs
-    use: [network, private_service_access]  # Same network dependencies
+    source: modules/file-system/filestore
+    use: [network, private_service_access]
     settings:
-      local_mount: /shared  # Mount point for shared workshop files and data
-      size_gb: 1024  # 1TB capacity for shared storage (sufficient for workshop)
+      local_mount: /shared
+      size_gb: 1024
 
-  # Static GPU nodeset - defines always-on GPU compute nodes
   - id: static_gpu_nodeset
-    source: community/modules/compute/schedmd-slurm-gcp-v6-nodeset  # Slurm nodeset module
-    use: [network]  # Requires network connectivity
+    source: community/modules/compute/schedmd-slurm-gcp-v6-nodeset
+    use: [network]
     settings:
-      node_count_static: 2  # 2 always-running GPU nodes for immediate availability
-      node_count_dynamic_max: 0  # No dynamic scaling for static nodeset
-      machine_type: g2-standard-4  # G2 machine type with NVIDIA L4 GPUs (4 vCPUs, 16GB RAM)
-      bandwidth_tier: gvnic_enabled  # High-performance gVNIC networking for HPC workloads
-      allow_automatic_updates: false  # Disable auto-updates to maintain cluster stability
-
-  # Static GPU partition - Slurm partition for static GPU nodes
-  - id: static_gpu_partition
-    source: community/modules/compute/schedmd-slurm-gcp-v6-partition  # Slurm partition module
-    use:
-    - static_gpu_nodeset  # Depends on static GPU nodeset
-    settings:
-      partition_name: staticgpu  # Slurm partition name (no hyphens per regex requirement)
-      exclusive: false  # Allows multiple jobs per node (shared access)
-
-  # Dynamic GPU nodeset - defines autoscaling GPU compute nodes
-  - id: dynamic_gpu_nodeset
-    source: community/modules/compute/schedmd-slurm-gcp-v6-nodeset  # Same nodeset module
-    use: [network]  # Network dependency
-    settings:
-      node_count_static: 0  # No always-on nodes (purely dynamic)
-      node_count_dynamic_max: 2  # Maximum 2 autoscaling GPU nodes
-      machine_type: g2-standard-4  # Same G2 machine type as static nodes
-      bandwidth_tier: gvnic_enabled  # High-performance networking
-      allow_automatic_updates: false  # Stability-focused configuration
-
-  # Dynamic GPU partition - Slurm partition for dynamic GPU nodes
-  - id: dynamic_gpu_partition
-    source: community/modules/compute/schedmd-slurm-gcp-v6-partition  # Partition module
-    use:
-    - dynamic_gpu_nodeset  # Depends on dynamic nodeset
-    settings:
-      partition_name: dynamicgpu  # Partition name matching nodeset
-      exclusive: false  # Shared node access for cost efficiency
-
-  # Slurm login nodes - provides user access point to the cluster
-  - id: slurm_login
-    source: community/modules/scheduler/schedmd-slurm-gcp-v6-login  # Login node module
-    use: [network]  # Network dependency
-    settings:
-      machine_type: n2-standard-4  # General-purpose N2 instance (4 vCPUs, 16GB RAM)
-      enable_login_public_ips: true  # Public IP for SSH access from outside GCP
+      node_count_static: 2
+      machine_type: g2-standard-4
+      bandwidth_tier: gvnic_enabled
+      allow_automatic_updates: false
       instance_image:
-        family: sc25-workshop-slurm  # Reference the image family
-        project: nersc-sc25-demo      # Your project ID
+        family: sc25-workshop-slurm
+        project: $(vars.project_id)
 
-  # Slurm controller - central Slurm management and scheduling service
-  - id: slurm_controller
-    source: community/modules/scheduler/schedmd-slurm-gcp-v6-controller  # Controller module
-    use:
-    - network  # Network connectivity
-    - static_gpu_partition  # Access to static partition configuration
-    - dynamic_gpu_partition  # Access to dynamic partition configuration
-    - homefs  # Mount home filesystem
-    - sharedfs  # Mount shared filesystem
-    - slurm_login  # Coordinate with login nodes
+  - id: dynamic_gpu_nodeset
+    source: community/modules/compute/schedmd-slurm-gcp-v6-nodeset
+    use: [network]
     settings:
-      enable_controller_public_ips: true  # Public IP for Slurm controller (admin access)
+      node_count_dynamic_max: 2
+      machine_type: g2-standard-4
+      bandwidth_tier: gvnic_enabled
+      allow_automatic_updates: false
+      instance_image:
+        family: sc25-workshop-slurm
+        project: $(vars.project_id)
+
+  - id: static_gpu_partition
+    source: community/modules/compute/schedmd-slurm-gcp-v6-partition
+    use: [static_gpu_nodeset]
+    settings:
+      partition_name: staticgpu
+      exclusive: false
+      is_default: true
+
+  - id: dynamic_gpu_partition
+    source: community/modules/compute/schedmd-slurm-gcp-v6-partition
+    use: [dynamic_gpu_nodeset]
+    settings:
+      partition_name: dynamicgpu
+      exclusive: false
+
+  - id: slurm_login
+    source: community/modules/scheduler/schedmd-slurm-gcp-v6-login
+    use: [network]
+    settings:
+      machine_type: n2-standard-8
+      enable_login_public_ips: true
+      instance_image:
+        family: sc25-workshop-slurm
+        project: $(vars.project_id)
+
+  - id: slurm_controller
+    source: community/modules/scheduler/schedmd-slurm-gcp-v6-controller
+    use:
+    - network
+    - static_gpu_partition
+    - dynamic_gpu_partition
+    - homefs
+    - sharedfs
+    - slurm_login
+    settings:
+      enable_controller_public_ips: true
