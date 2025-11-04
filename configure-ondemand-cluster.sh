@@ -8,13 +8,13 @@ mkdir -p /etc/ood/config/clusters.d
 # This needs to run on the login node
 slurm_login_node=$(hostname)
 
-cat > /etc/ood/config/clusters.d/sc25-workshop.yml <<'EOF'
+cat > /etc/ood/config/clusters.d/sc25-workshop.yml <<EOF
 ---
 v2:
   metadata:
     title: "SC25 Workshop Cluster"
   login:
-    host: "localhost"
+    host: "${slurm_login_node}"
   job:
     adapter: "slurm"
     cluster: "sc25-workshop"
