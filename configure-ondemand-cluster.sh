@@ -49,7 +49,7 @@ attributes:
       - ["Dynamic GPU", "dynamicgpu"]
 EOF
 
-echo "Setting up SSH keys for workshop users..."
+echo "=== Configuring SSH for workshop users (NFS-aware) ==="
 
 for i in {1..10}; do
     username="user${i}"
@@ -57,24 +57,38 @@ for i in {1..10}; do
     
     echo "Setting up SSH for ${username}..."
     
-    # Generate SSH key without passphrase
-    sudo -u ${username} ssh-keygen -t rsa -b 2048 -f ${user_home}/.ssh/id_rsa -N "" -q
+    # Get the user's UID/GID
+    user_uid=$(id -u ${username})
+    user_gid=$(id -g ${username})
     
-    # Add public key to authorized_keys
-    sudo -u ${username} cat ${user_home}/.ssh/id_rsa.pub >> ${user_home}/.ssh/authorized_keys
+    # Create .ssh directory as root first
+    mkdir -p ${user_home}/.ssh
     
-    # Set proper permissions
-    sudo -u ${username} chmod 600 ${user_home}/.ssh/authorized_keys
-    sudo -u ${username} chmod 700 ${user_home}/.ssh
+    # Generate SSH key as root (will fix ownership after)
+    if [ ! -f "${user_home}/.ssh/id_rsa" ]; then
+        ssh-keygen -t rsa -b 2048 -f ${user_home}/.ssh/id_rsa -N "" -q
+        echo "Generated SSH key for ${username}"
+    fi
     
-    # Test SSH connection (accept host key)
-    sudo -u ${username} ssh -o StrictHostKeyChecking=no localhost "echo SSH works for ${username}" || true
+    # Create authorized_keys
+    cat ${user_home}/.ssh/id_rsa.pub > ${user_home}/.ssh/authorized_keys
     
-    echo "✓ SSH configured for ${username}"
+    # Fix ownership (do this BEFORE chmod on NFS)
+    chown -R ${user_uid}:${user_gid} ${user_home}/.ssh
+    
+    # Now set permissions (as root, after ownership is correct)
+    chmod 700 ${user_home}/.ssh
+    chmod 600 ${user_home}/.ssh/id_rsa
+    chmod 644 ${user_home}/.ssh/id_rsa.pub
+    chmod 600 ${user_home}/.ssh/authorized_keys
+    
+    # Accept localhost host key
+    sudo -u ${username} ssh -o StrictHostKeyChecking=no localhost "exit" 2>/dev/null || true
+    
+    echo "✓ ${username} configured"
 done
 
-echo "All users can now SSH to localhost!"
-
+echo "SSH setup complete!"
 
 systemctl restart httpd
 
