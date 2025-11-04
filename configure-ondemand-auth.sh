@@ -13,23 +13,31 @@ mkdir -p /etc/httpd/
 HTPASSWD_FILE="/etc/httpd/.htpasswd"
 
 # Remove old file if exists
-rm -f $HTPASSWD_FILE
+rm -f ${HTPASSWD_FILE}
 
 # Create the file with first user (use -c flag)
-echo "nersc1" | htpasswd -c -i -B $HTPASSWD_FILE user1
+echo "nersc1" | htpasswd -c -i -B ${HTPASSWD_FILE} user1
 echo "Added user1 to Apache authentication"
 
 # Add remaining users (without -c flag)
 for i in {2..10}; do
     username="user${i}"
     password="nersc${i}"
-    echo "$password" | htpasswd -i -B $HTPASSWD_FILE $username
+    echo "${password}" | htpasswd -i -B ${HTPASSWD_FILE} $username
     echo "Added $username to Apache authentication"
 done
 
 # Set proper permissions
-chmod 640 $HTPASSWD_FILE
-chown root:apache $HTPASSWD_FILE
+chmod 640 ${HTPASSWD_FILE}
+chown root:apache ${HTPASSWD_FILE}
+
+EXTERNAL_IP=$(gcloud compute instances describe sc25worksh-slurm-login-001 \
+  --zone=us-central1-a \
+  --project=nersc-sc25-demo \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+echo "Open OnDemand URL: http://${EXTERNAL_IP}"
+
 
 # Configure OnDemand to use basic auth
 mkdir -p /etc/ood/config
@@ -42,14 +50,14 @@ auth:
   - 'AuthType Basic'
   - 'AuthName "SC25 Workshop"'
   - 'AuthBasicProvider file'
-  - 'AuthUserFile "$HTPASSWD_FILE"'
+  - 'AuthUserFile "${HTPASSWD_FILE}"'
   - 'Require valid-user'
 
 # Map authenticated user to system user
 user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex'
 
 # Set the servername (replace with your actual hostname or IP)
-servername: $(hostname)
+servername: ${EXTERNAL_IP}
 
 # Passenger configuration
 passenger_min_instances: 1
@@ -63,4 +71,4 @@ EOF
 systemctl restart httpd
 
 echo "Open OnDemand authentication configured!"
-echo "Password file created at: $HTPASSWD_FILE"
+echo "Password file created at: ${HTPASSWD_FILE}"
