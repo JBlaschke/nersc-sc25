@@ -14,7 +14,7 @@ deployment_groups:
     source: modules/packer/custom-image
     kind: packer
     settings:
-      source_image_family: slurm-gcp-6-5-hpc-rocky-linux-8
+      source_image_family: slurm-gcp-6-11-hpc-rocky-linux-8
       source_image_project_id: [schedmd-slurm-public]
       image_family: sc25-workshop-slurm
       disk_size: 50
