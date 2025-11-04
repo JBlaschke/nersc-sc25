@@ -48,13 +48,13 @@ cat > /etc/ood/config/ood_portal.yml <<EOF
 # Use basic authentication
 auth:
   - 'AuthType Basic'
-  - 'AuthName "SC25 Workshop"'
+  - 'AuthName "SC25 Workshop - Enter your username and password"'
   - 'AuthBasicProvider file'
   - 'AuthUserFile "${HTPASSWD_FILE}"'
   - 'Require valid-user'
 
-# Map authenticated user to system user
-user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex'
+# Don't use user mapping - just use REMOTE_USER directly
+user_env: 'REMOTE_USER'
 
 # Set the servername (replace with your actual hostname or IP)
 servername: ${EXTERNAL_IP}
