@@ -5,6 +5,9 @@ echo "Configuring Open OnDemand cluster settings..."
 
 mkdir -p /etc/ood/config/clusters.d
 
+# This needs to run on the login node
+slurm_login_node=$(hostname)
+
 cat > /etc/ood/config/clusters.d/sc25-workshop.yml <<'EOF'
 ---
 v2:
@@ -17,7 +20,7 @@ v2:
     cluster: "sc25-workshop"
     bin: "/usr/bin"
     conf: "/etc/slurm/slurm.conf"
-    submit_host: "localhost"
+    submit_host: "${slurm_login_node}"
 EOF
 
 # Enable OnDemand apps
