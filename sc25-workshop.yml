@@ -25,7 +25,10 @@ deployment_groups:
       # Don't use startup_script - it overwrites Slurm's
       # Use shell_scripts instead (runs during Packer build only)
       shell_scripts:
-        - $(ghpc_stage("install-software.sh"))
+        - $(ghpc_stage("./setup/install-software.sh"))
+        - $(ghpc_stage("./setup/create-users.sh"))
+        - $(ghpc_stage("./setup/configure-ondemand-cluster.sh"))
+
 
 # Deploy cluster with custom image
 - group: primary
