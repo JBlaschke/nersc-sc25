@@ -26,7 +26,6 @@ deployment_groups:
       # Use shell_scripts instead (runs during Packer build only)
       shell_scripts:
         - $(ghpc_stage("./setup/install-software.sh"))
-        - $(ghpc_stage("./setup/create-users.sh"))
         - $(ghpc_stage("./setup/configure-ondemand-cluster.sh"))
 
 
