@@ -26,9 +26,11 @@ for i in {1..10}; do
     cat ${user_home}/.ssh/id_rsa.pub > ${user_home}/.ssh/authorized_keys
     
     # Fix ownership (do this BEFORE chmod on NFS)
+    chown -R ${user_uid}:${user_gid} ${user_home}
     chown -R ${user_uid}:${user_gid} ${user_home}/.ssh
     
     # Now set permissions (as root, after ownership is correct)
+    chmod 700 ${user_home}
     chmod 700 ${user_home}/.ssh
     chmod 600 ${user_home}/.ssh/id_rsa
     chmod 644 ${user_home}/.ssh/id_rsa.pub
