@@ -18,9 +18,10 @@ v2:
   job:
     adapter: "slurm"
     cluster: "sc25-workshop"
-    bin: "/usr/bin"
-    conf: "/etc/slurm/slurm.conf"
+    bin: "/usr/local/bin"
+    conf: "/run/slurm/conf/slurm.conf"
     submit_host: "localhost"
+    # copy_environment: false
 EOF
 
 # Enable OnDemand apps

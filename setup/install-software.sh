@@ -30,3 +30,5 @@ firewall-cmd --permanent --add-service=https 2>/dev/null || true
 firewall-cmd --reload 2>/dev/null || true
 
 echo "Open OnDemand installation complete!"
+
+git clone https://github.com/JBlaschke/nersc-sc25.git
