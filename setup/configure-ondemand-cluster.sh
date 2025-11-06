@@ -17,7 +17,7 @@ v2:
     host: "localhost"
   job:
     adapter: "slurm"
-    cluster: "sc25-workshop"
+    # cluster: "sc25-workshop"
     bin: "/usr/local/bin"
     conf: "/run/slurm/conf/slurm.conf"
     submit_host: "localhost"
