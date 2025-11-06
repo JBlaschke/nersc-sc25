@@ -31,4 +31,10 @@ firewall-cmd --reload 2>/dev/null || true
 
 echo "Open OnDemand installation complete!"
 
+echo "Cloning Repo"
+
+mkdir -p /deploy
+cd /deploy
 git clone https://github.com/JBlaschke/nersc-sc25.git
+
+echo "Cloning Repo complete!"

@@ -27,6 +27,7 @@ deployment_groups:
       shell_scripts:
         - $(ghpc_stage("./setup/install-software.sh"))
         - $(ghpc_stage("./setup/configure-ondemand-cluster.sh"))
+        - $(ghpc_stage("./setup/create-users.sh"))
 
 
 # Deploy cluster with custom image
