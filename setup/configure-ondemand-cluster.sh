@@ -8,7 +8,7 @@ mkdir -p /etc/ood/config/clusters.d
 # # This needs to run on the login node
 # slurm_login_node=$(hostname)
 
-cat > /etc/ood/config/clusters.d/sc25-workshop.yml <<'EOF'
+tee > /etc/ood/config/clusters.d/sc25-workshop.yml <<'EOF'
 ---
 v2:
   metadata:
@@ -30,7 +30,7 @@ v2:
       set_host: "host=$(hostname -s)"
 EOF
 
-cat > /etc/ood/config/clusters.d/cluster.yml.template <<'EOF'
+tee > /etc/ood/config/clusters.d/cluster.yml.template <<'EOF'
 ---
 v2:
   metadata:
@@ -45,14 +45,14 @@ EOF
 
 # Enable OnDemand apps
 mkdir -p /etc/ood/config/apps/shell
-cat > /etc/ood/config/apps/shell/env <<'EOF'
+tee > /etc/ood/config/apps/shell/env <<'EOF'
 DEFAULT_SSHHOST=localhost
 EOF
 
 # Configure Jupyter app
 mkdir -p /etc/ood/config/apps/bc_desktop
 mkdir -p /etc/ood/config/apps/jupyter
-cat > /etc/ood/config/apps/jupyter/form.yml <<'EOF'
+tee > /etc/ood/config/apps/jupyter/form.yml <<'EOF'
 ---
 cluster: "sc25-workshop"
 attributes:
@@ -68,7 +68,7 @@ attributes:
       - ["Dynamic GPU", "dynamicgpu"]
 EOF
 
-cat > /etc/ood/config/nginx_stage.yml <<EOF
+tee > /etc/ood/config/nginx_stage.yml <<EOF
 ---
 pun_custom_env:
   PATH: "/usr/local/bin:/usr/bin:/bin"
