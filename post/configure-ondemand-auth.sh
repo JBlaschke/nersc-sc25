@@ -2,6 +2,7 @@
 set -euo pipefail
 
 echo "Configuring Open OnDemand for basic authentication..."
+echo "WARNING: this is super basic, for production clusters use LDAP"
 
 # Install Apache basic auth tools
 dnf install -y httpd-tools
@@ -38,8 +39,11 @@ EXTERNAL_IP=$(gcloud compute instances describe sc25worksh-slurm-login-001 \
 
 echo "Open OnDemand URL: http://${EXTERNAL_IP}"
 
+echo "Configuring Open OnDemand to use IP address (above) and not FQDN..."
+echo "WARNING WARNING WARNING this is not meant for a production cluster. For production deployments use FQDN"
+# Configure OnDemand to use basic auth. This will only work if you disable CSRF
+# (below), for production clusters use REAL FQDN and LDAP
 
-# Configure OnDemand to use basic auth
 mkdir -p /etc/ood/config
 cat > /etc/ood/config/ood_portal.yml <<EOF
 ---
@@ -72,3 +76,41 @@ systemctl restart httpd
 
 echo "Open OnDemand authentication configured!"
 echo "Password file created at: ${HTPASSWD_FILE}"
+
+
+echo "Disabling CSRF in Job Composer system app..."
+echo "WARNING WARNING WARNING: this is NOT a permanent solution, and only meant to work with IP-based (i.e. temporary and insecure) deployments"
+
+# This will disable CSRF, remove this for deployments with REAL FQDN
+
+# 1. Add to app's initializers
+sudo tee /var/www/ood/apps/sys/myjobs/config/initializers/zzz_disable_csrf.rb <<'EOF'
+# WORKSHOP ONLY - Disable CSRF
+Rails.application.config.to_prepare do
+  ApplicationController.class_eval do
+    skip_before_action :verify_authenticity_token, raise: false
+    
+    def protect_against_forgery?
+      false
+    end
+    
+    def verified_request?
+      true
+    end
+  end
+end
+
+Rails.application.config.action_controller.allow_forgery_protection = false
+EOF
+
+# 2. Set permissions
+sudo chmod 644 /var/www/ood/apps/sys/myjobs/config/initializers/zzz_disable_csrf.rb
+
+# 3. Touch restart file to force app reload
+sudo touch /var/www/ood/apps/sys/myjobs/tmp/restart.txt
+
+# 4. Clean PUNs
+sudo /opt/ood/nginx_stage/sbin/nginx_stage nginx_clean
+
+# 5. Restart Apache
+sudo systemctl restart httpd

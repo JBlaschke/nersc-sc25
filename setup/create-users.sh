@@ -2,6 +2,7 @@
 set -euo pipefail
 
 echo "Creating workshop users..."
+echo "WARNING: this is super basic, for production clusters use LDAP"
 
 # Create users user1 through user10
 for i in {1..10}; do
