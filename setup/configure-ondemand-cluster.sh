@@ -52,7 +52,6 @@ EOF
 # Configure Jupyter app
 mkdir -p /etc/ood/config/apps/bc_desktop
 mkdir -p /etc/ood/config/apps/jupyter
-
 cat > /etc/ood/config/apps/jupyter/form.yml <<'EOF'
 ---
 cluster: "sc25-workshop"
@@ -76,7 +75,6 @@ pun_custom_env:
 EOF
 
 mkdir -p /etc/ood/config/apps/bc_jupyter
-
 tee /etc/ood/config/apps/bc_jupyter/form.yml <<'EOF'
 ---
 cluster: "sc25-workshop"
@@ -129,8 +127,7 @@ form:
   - bc_email_on_started
 EOF
 
-mkdir -p /etc/ood/config/apps/bc_jupyter
-
+mkdir -p /etc/ood/config/apps/bc_jupyter/template
 tee /etc/ood/config/apps/bc_jupyter/template/before.sh.erb <<'EOF'
 # Load the shared Jupyter environment
 export PATH="/shared/jupyter/venv/bin:${PATH}"
