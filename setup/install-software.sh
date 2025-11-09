@@ -22,12 +22,12 @@ echo "Open OnDemand software installed"
 echo "Installing Jupyer ..."
 
 # Create a shared Python environment for Jupyter
-sudo mkdir -p /shared/jupyter
-sudo python3 -m venv /shared/jupyter/venv
+sudo mkdir -p /deploy/jupyter
+sudo python3 -m venv /deploy/jupyter/venv
 
 # Install JupyterLab and common packages
-sudo /shared/jupyter/venv/bin/pip install --upgrade pip
-sudo /shared/jupyter/venv/bin/pip install \
+sudo /deploy/jupyter/venv/bin/pip install --upgrade pip
+sudo /deploy/jupyter/venv/bin/pip install \
   jupyterlab \
   notebook \
   ipykernel \
@@ -39,13 +39,13 @@ sudo /shared/jupyter/venv/bin/pip install \
   seaborn
 
 # Make accessible to all users
-sudo chmod -R 755 /shared/jupyter
+sudo chmod -R 755 /deploy/jupyter
 
 echo "Jupyter software installed"
 
 echo "Adding Jupyter to Open OnDemand, and Starting OOD portal ..."
 
-sudo dnf install -y ondemand-bc-jupyter 2>/dev/null || echo "Already installed"
+sudo dnf install -y ondemand-bc_osc_jupyter 2>/dev/null || echo "Already installed"
 
 # Configure OnDemand
 /opt/ood/ood-portal-generator/sbin/update_ood_portal

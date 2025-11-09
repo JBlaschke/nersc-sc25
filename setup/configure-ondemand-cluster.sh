@@ -130,8 +130,8 @@ EOF
 mkdir -p /etc/ood/config/apps/bc_jupyter/template
 tee /etc/ood/config/apps/bc_jupyter/template/before.sh.erb <<'EOF'
 # Load the shared Jupyter environment
-export PATH="/shared/jupyter/venv/bin:${PATH}"
-export JUPYTER_PATH="/shared/jupyter/venv/share/jupyter"
+export PATH="/deploy/jupyter/venv/bin:${PATH}"
+export JUPYTER_PATH="/deploy/jupyter/venv/share/jupyter"
 
 # Set up Jupyter config directory
 export JUPYTER_CONFIG_DIR="${HOME}/.jupyter"
