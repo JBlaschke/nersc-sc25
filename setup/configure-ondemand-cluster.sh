@@ -14,15 +14,15 @@ v2:
   metadata:
     title: "SC25 Workshop Cluster"
     hidden: false
-  
+
   login:
     host: "localhost"
-  
+
   job:
     adapter: "slurm"
     bin: "/usr/local/bin"
     conf: "/run/slurm/conf/slurm.conf"
-    
+
   batch_connect:
     basic:
       script_wrapper: |

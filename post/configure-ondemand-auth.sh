@@ -89,11 +89,11 @@ sudo tee /var/www/ood/apps/sys/myjobs/config/initializers/zzz_disable_csrf.rb <<
 Rails.application.config.to_prepare do
   ApplicationController.class_eval do
     skip_before_action :verify_authenticity_token, raise: false
-    
+
     def protect_against_forgery?
       false
     end
-    
+
     def verified_request?
       true
     end
