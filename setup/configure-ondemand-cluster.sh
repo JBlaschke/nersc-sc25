@@ -257,6 +257,7 @@ chmod 755 /var/www/ood/apps/sys/jupyter/template/script.sh.erb
 # chmod 644 /etc/ood/config/apps/dashboard/initializers/ood.rb
 
 # Create dashboard env
+mkdir -p /etc/ood/config/apps/dashboard
 tee /etc/ood/config/apps/dashboard/env <<'EOF'
 # Dashboard configuration
 OOD_DASHBOARD_TITLE="SC25 Workshop"
