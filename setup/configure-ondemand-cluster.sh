@@ -237,24 +237,24 @@ chmod 644 /var/www/ood/apps/sys/jupyter/*.yml
 chmod 755 /var/www/ood/apps/sys/jupyter/template
 chmod 755 /var/www/ood/apps/sys/jupyter/template/script.sh.erb
 
-# Create dashboard config directory
-mkdir -p /etc/ood/config/apps/dashboard/initializers
-
-# Enable Interactive Apps in the navigation
-tee /etc/ood/config/apps/dashboard/initializers/ood.rb <<'EOF'
-# Enable Interactive Apps menu
-Rails.application.config.to_prepare do
-  NavConfig.categories = [
-    "Files",
-    "Jobs",
-    "Clusters",
-    "Interactive Apps"
-  ]
-end
-EOF
-
-# Set permissions
-chmod 644 /etc/ood/config/apps/dashboard/initializers/ood.rb
+# # Create dashboard config directory
+# mkdir -p /etc/ood/config/apps/dashboard/initializers
+# 
+# # Enable Interactive Apps in the navigation
+# tee /etc/ood/config/apps/dashboard/initializers/ood.rb <<'EOF'
+# # Enable Interactive Apps menu
+# Rails.application.config.to_prepare do
+#   NavConfig.categories = [
+#     "Files",
+#     "Jobs",
+#     "Clusters",
+#     "Interactive Apps"
+#   ]
+# end
+# EOF
+# 
+# # Set permissions
+# chmod 644 /etc/ood/config/apps/dashboard/initializers/ood.rb
 
 # Create dashboard env
 tee /etc/ood/config/apps/dashboard/env <<'EOF'
