@@ -4,7 +4,7 @@ set -xeuo pipefail
 exec > >(tee /var/log/ondemand-install.log)
 exec 2>&1
 
-echo "Installing Open OnDemand..."
+echo "Installing Open OnDemand ..."
 
 # Enable required modules for OnDemand
 dnf module reset nodejs ruby -y
@@ -16,6 +16,36 @@ dnf install -y https://yum.osc.edu/ondemand/latest/ondemand-release-web-latest-1
 
 # Install OnDemand and tools
 dnf install -y ondemand git vim tmux htop
+
+echo "Open OnDemand software installed"
+
+echo "Installing Jupyer ..."
+
+# Create a shared Python environment for Jupyter
+sudo mkdir -p /shared/jupyter
+sudo python3 -m venv /shared/jupyter/venv
+
+# Install JupyterLab and common packages
+sudo /shared/jupyter/venv/bin/pip install --upgrade pip
+sudo /shared/jupyter/venv/bin/pip install \
+  jupyterlab \
+  notebook \
+  ipykernel \
+  numpy \
+  scipy \
+  matplotlib \
+  pandas \
+  scikit-learn \
+  seaborn
+
+# Make accessible to all users
+sudo chmod -R 755 /shared/jupyter
+
+echo "Jupyter software installed"
+
+echo "Adding Jupyter to Open OnDemand, and Starting OOD portal ..."
+
+sudo dnf install -y ondemand-bc-jupyter 2>/dev/null || echo "Already installed"
 
 # Configure OnDemand
 /opt/ood/ood-portal-generator/sbin/update_ood_portal
@@ -29,9 +59,9 @@ firewall-cmd --permanent --add-service=http 2>/dev/null || true
 firewall-cmd --permanent --add-service=https 2>/dev/null || true
 firewall-cmd --reload 2>/dev/null || true
 
-echo "Open OnDemand installation complete!"
+echo "Open OnDemand startup complete!"
 
-echo "Cloning Repo"
+echo "Cloning Workshop Cluster Intrastructure Repo ..."
 
 mkdir -p /deploy
 cd /deploy
