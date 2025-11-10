@@ -45,7 +45,7 @@ echo "WARNING WARNING WARNING this is not meant for a production cluster. For pr
 # (below), for production clusters use REAL FQDN and LDAP
 
 mkdir -p /etc/ood/config
-cat > /etc/ood/config/ood_portal.yml <<EOF
+tee > /etc/ood/config/ood_portal.yml <<EOF
 ---
 # Open OnDemand Portal Configuration
 
@@ -88,7 +88,7 @@ echo "WARNING WARNING WARNING: this is NOT a permanent solution, and only meant 
 # This will disable CSRF, remove this for deployments with REAL FQDN
 
 # 1. Add to app's initializers
-sudo tee /var/www/ood/apps/sys/myjobs/config/initializers/zzz_disable_csrf.rb <<'EOF'
+tee /var/www/ood/apps/sys/myjobs/config/initializers/zzz_disable_csrf.rb <<'EOF'
 # WORKSHOP ONLY - Disable CSRF
 Rails.application.config.to_prepare do
   ApplicationController.class_eval do
