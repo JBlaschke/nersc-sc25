@@ -235,8 +235,6 @@ jupyter-lab --ip=0.0.0.0 \
            --NotebookApp.base_url=/node/${host}/${port}/ \
            --NotebookApp.token=${password} \
            --no-browser
-# set -x
-# jupyter lab --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
 EOF
 
 # Set permissions
