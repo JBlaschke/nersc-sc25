@@ -15,7 +15,7 @@ dnf module install nodejs:20 ruby:3.3 -y
 dnf install -y https://yum.osc.edu/ondemand/latest/ondemand-release-web-latest-1-6.noarch.rpm
 
 # Install OnDemand and tools
-dnf install -y ondemand git vim tmux htop
+dnf install -y ondemand git vim tmux htop nmap-ncat
 
 echo "Open OnDemand software installed"
 
