@@ -45,6 +45,7 @@ v2:
     basic:
       script_wrapper: |
         %s
+    set_host: "host=$(hostname -A | awk '{print $1}')"
 EOF
 
 # Enable OnDemand apps
