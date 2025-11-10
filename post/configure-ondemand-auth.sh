@@ -66,6 +66,10 @@ servername: ${EXTERNAL_IP}
 # Passenger configuration
 passenger_min_instances: 1
 passenger_start_timeout: 600
+
+host_regex: '.*nersc-sc25-demo\.internal'
+node_uri: '/node'
+rnode_uri: '/rnode'
 EOF
 
 # Update the portal configuration
