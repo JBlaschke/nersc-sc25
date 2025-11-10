@@ -205,6 +205,9 @@ batch_connect:
   template: basic
 
 script:
+  batch_connect:
+    min_port: 2000
+    max_prot: 6000
   native:
     - "-p"
     - "<%= partition %>"
