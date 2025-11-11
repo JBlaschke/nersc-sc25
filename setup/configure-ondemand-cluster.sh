@@ -192,18 +192,18 @@ attributes:
     min: 1
     max: 8
 
+  mode:
+    widget: "radio"
+    value: "1"
+    options:
+      - ["Jupyter Lab", "1"]
+      - ["Jupyter Notebook", "0"]
+
 form:
   - partition
   - bc_num_hours
   - num_cores
   - mode
-
-mode:
-  widget: "radio"
-  value: "1"
-  options:
-    - ["Jupyter Lab", "1"]
-    - ["Jupyter Notebook", "0"]
 EOF
 
 # Create submit config
