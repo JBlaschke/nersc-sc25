@@ -194,8 +194,16 @@ attributes:
 
 form:
   - partition
-  - bc_num_hours  
+  - bc_num_hours
   - num_cores
+  - mode
+
+mode:
+  widget: "radio"
+  value: "1"
+  options:
+    - ["Jupyter Lab", "1"]
+    - ["Jupyter Notebook", "0"]
 EOF
 
 # Create submit config
@@ -237,12 +245,10 @@ jupyter-lab --ip=0.0.0.0 \
            --no-browser
 EOF
 
-cp                                                              \
-    /var/www/ood/apps/sys/bc_osc_jupyter/template/before.sh.erb \
+cp  /var/www/ood/apps/sys/bc_osc_jupyter/template/before.sh.erb \
     /var/www/ood/apps/sys/jupyter/template
 
-cp                                                              \
-    /var/www/ood/apps/sys/bc_osc_jupyter/template/after.sh.erb  \
+cp  /var/www/ood/apps/sys/bc_osc_jupyter/template/after.sh.erb  \
     /var/www/ood/apps/sys/jupyter/template
 
 # Set permissions
