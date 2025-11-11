@@ -237,12 +237,12 @@ jupyter-lab --ip=0.0.0.0 \
            --no-browser
 EOF
 
-cp                                                                       \
-    /var/www/ood/apps/sys/bc_osc_jupyter/template/template/before.sh.erb \
+cp                                                              \
+    /var/www/ood/apps/sys/bc_osc_jupyter/template/before.sh.erb \
     /var/www/ood/apps/sys/jupyter/template
 
-cp                                                                      \
-    /var/www/ood/apps/sys/bc_osc_jupyter/template/template/after.sh.erb \
+cp                                                              \
+    /var/www/ood/apps/sys/bc_osc_jupyter/template/after.sh.erb  \
     /var/www/ood/apps/sys/jupyter/template
 
 # Set permissions
