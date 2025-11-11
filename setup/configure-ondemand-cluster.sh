@@ -45,7 +45,7 @@ v2:
     basic:
       script_wrapper: |
         %s
-    set_host: "host=$(hostname -A | awk '{print $1}')"
+    set_host: "host=$(hostname -s)"
 EOF
 
 # Enable OnDemand apps
@@ -153,10 +153,10 @@ EOF
 # EOF
 
 # Create app directory
- mkdir -p /var/www/ood/apps/sys/jupyter/template
+mkdir -p /var/www/ood/apps/sys/jupyter/template
 
 # Create manifest
- tee /var/www/ood/apps/sys/jupyter/manifest.yml <<'EOF'
+tee /var/www/ood/apps/sys/jupyter/manifest.yml <<'EOF'
 ---
 name: Jupyter Lab
 category: Interactive Apps
@@ -207,7 +207,7 @@ batch_connect:
 script:
   batch_connect:
     min_port: 2000
-    max_prot: 6000
+    max_port: 6000
   native:
     - "-p"
     - "<%= partition %>"
@@ -237,12 +237,20 @@ jupyter-lab --ip=0.0.0.0 \
            --no-browser
 EOF
 
+cp                                                                       \
+    /var/www/ood/apps/sys/bc_osc_jupyter/template/template/before.sh.erb \
+    /var/www/ood/apps/sys/jupyter/template
+
+cp                                                                      \
+    /var/www/ood/apps/sys/bc_osc_jupyter/template/template/after.sh.erb \
+    /var/www/ood/apps/sys/jupyter/template
+
 # Set permissions
 chown -R apache:apache /var/www/ood/apps/sys/jupyter
-chmod 755 /var/www/ood/apps/sys/jupyter
-chmod 644 /var/www/ood/apps/sys/jupyter/*.yml
-chmod 755 /var/www/ood/apps/sys/jupyter/template
-chmod 755 /var/www/ood/apps/sys/jupyter/template/script.sh.erb
+chmod -R 755 /var/www/ood/apps/sys/jupyter
+chmod -R 644 /var/www/ood/apps/sys/jupyter/*.yml
+chmod -R 755 /var/www/ood/apps/sys/jupyter/template
+chmod -R 755 /var/www/ood/apps/sys/jupyter/template/script.sh.erb
 
 # Create dashboard env
 mkdir -p /etc/ood/config/apps/dashboard

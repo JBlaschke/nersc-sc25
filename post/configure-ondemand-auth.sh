@@ -67,7 +67,7 @@ servername: ${EXTERNAL_IP}
 passenger_min_instances: 1
 passenger_start_timeout: 600
 
-host_regex: '.*nersc-sc25-demo\.internal'
+host_regex: 'sc25worksh-(staticgpunodes|dynamicgpunodes|login)-[0-9]+'
 node_uri: '/node'
 rnode_uri: '/rnode'
 EOF
