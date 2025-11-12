@@ -24,6 +24,7 @@ v2:
     conf: "/run/slurm/conf/slurm.conf"
 
   batch_connect:
+    ssh_allow: true
     basic:
       script_wrapper: |
         %s
@@ -35,12 +36,15 @@ tee > /etc/ood/config/clusters.d/cluster.yml.template <<'EOF'
 v2:
   metadata:
     title: "SC25 Workshop Cluster"
+
   login:
     host: "localhost"
+
   job:
     adapter: "slurm"
     bin: "/usr/local/bin"
     conf: "/run/slurm/conf/slurm.conf"
+
   batch_connect:
     basic:
       script_wrapper: |
