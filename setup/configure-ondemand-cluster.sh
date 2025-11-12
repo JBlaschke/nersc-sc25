@@ -199,11 +199,19 @@ attributes:
       - ["Jupyter Lab", "1"]
       - ["Jupyter Notebook", "0"]
 
+  working_dir:
+    widget: "path_selector"
+    label: "Root Directory"
+    show_hidden: false
+    show_files: false   # Only display directories
+    help: "Select your project directory; defaults to $HOME"
+
 form:
   - partition
   - bc_num_hours
   - num_cores
   - mode
+  - working_dir
 EOF
 
 # Create submit config
