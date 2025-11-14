@@ -151,13 +151,6 @@ export PATH="/deploy/jupyter/venv/bin:${PATH}"
 export JUPYTER_CONFIG_DIR="${HOME}/.jupyter"
 mkdir -p "${JUPYTER_CONFIG_DIR}"
 
-# # Launch Jupyter
-# jupyter-lab --ip=0.0.0.0 \
-#            --port=${port} \
-#            --NotebookApp.base_url=/node/${host}/${port}/ \
-#            --NotebookApp.token=${password} \
-#            --no-browser
-
 ## Taken from the OSC deployment example
 # Set working directory to notebook root directory
 cd "${NOTEBOOK_ROOT}"

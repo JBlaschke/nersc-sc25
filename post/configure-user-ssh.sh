@@ -3,7 +3,7 @@ set -euo pipefail
 
 echo "=== Configuring SSH for workshop users (NFS-aware) ==="
 
-for i in {1..10}; do
+for i in {1..100}; do
     username="user${i}"
     user_home="/home/${username}"
 
@@ -60,7 +60,7 @@ nvidia-smi || echo "No GPU available"
 EOF
 
 # Copy example to existing users
-for i in {1..10}; do
+for i in {1..100}; do
     cp /etc/skel/example-job.sh /home/user${i}/
     chown user${i}:user${i} /home/user${i}/example-job.sh
     chmod +x /home/user${i}/example-job.sh

@@ -21,7 +21,7 @@ echo "nersc1" | htpasswd -c -i -B ${HTPASSWD_FILE} user1
 echo "Added user1 to Apache authentication"
 
 # Add remaining users (without -c flag)
-for i in {2..10}; do
+for i in {2..100}; do
     username="user${i}"
     password="nersc${i}"
     echo "${password}" | htpasswd -i -B ${HTPASSWD_FILE} $username
