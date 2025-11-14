@@ -66,5 +66,6 @@ echo "Cloning Workshop Cluster Intrastructure Repo ..."
 mkdir -p /deploy
 cd /deploy
 git clone https://github.com/JBlaschke/nersc-sc25.git
+git clone https://github.com/JuliaParallel/DeploymentsOnHPC
 
 echo "Cloning Repo complete!"
