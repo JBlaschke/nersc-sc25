@@ -107,7 +107,7 @@ attributes:
     min: 1
     max: 8
     step: 1
-    help: "v100dws: max 4 GPUs, v100dws8: max 8 GPUs"
+    help: "t4dws: max 4 GPUs, v100dws: max 4 GPUs, v100dws8: max 8 GPUs"
 
   mode:
     widget: "radio"
