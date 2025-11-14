@@ -81,10 +81,10 @@ attributes:
     widget: select
     label: "Partition"
     options:
-      - ["Nvidia T4",            "t4dws"   ]
-      - ["Nvidia V100",          "v100dws" ]
-      - ["Nvidia V100 (8/Node)", "v100dws8"]
-    value: "t4dws"
+      - ["Nvidia T4 [t4dws]",               "t4dws"   ]
+      - ["Nvidia V100 (4/Node) [v100dws]",  "v100dws" ]
+      - ["Nvidia V100 (8/Node) [v100dws8]", "v100dws8"]
+    value: "Nvidia T4 [t4dws]"
   
   bc_num_hours:
     widget: number_field
