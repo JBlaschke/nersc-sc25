@@ -139,6 +139,8 @@ script:
     - "<%= num_cores %>"
     - "-t"
     - "<%= bc_num_hours %>:00:00"
+    - "--gpus-per-node"
+    - "<% if partition == "v100dws8" %> 8 <% else %> 4 <% end %>"
 EOF
 
 # Create launch script
@@ -158,7 +160,6 @@ mkdir -p "${JUPYTER_CONFIG_DIR}"
 cd "${NOTEBOOK_ROOT}"
 
 # Launch the Jupyter server
-set -x
 jupyter <%= context.mode == "1" ? 'lab' : 'notebook' %> --config="${CONFIG_FILE}"
 
 EOF
