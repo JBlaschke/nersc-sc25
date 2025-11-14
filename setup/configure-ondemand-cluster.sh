@@ -100,6 +100,15 @@ attributes:
     min: 1
     max: 8
 
+  num_gpus:
+    widget: number_field
+    label: "Number of GPUs"
+    value: 1
+    min: 1
+    max: 8
+    step: 1
+    help: "v100dws: max 4 GPUs, v100dws8: max 8 GPUs"
+
   mode:
     widget: "radio"
     value: "1"
@@ -118,6 +127,7 @@ form:
   - partition
   - bc_num_hours
   - num_cores
+  - num_gpus
   - mode
   - working_dir
 EOF
@@ -139,8 +149,7 @@ script:
     - "<%= num_cores %>"
     - "-t"
     - "<%= bc_num_hours %>:00:00"
-    - "--gpus-per-node"
-    - "<% if partition == "v100dws8" %> 8 <% else %> 4 <% end %>"
+    - "--gpus-per-node=<%= num_gpus %>"
 EOF
 
 # Create launch script
