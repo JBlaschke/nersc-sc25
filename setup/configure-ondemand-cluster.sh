@@ -81,8 +81,8 @@ attributes:
     widget: select
     label: "Partition"
     options:
-      - ["Static GPU", "staticgpu"]
-    value: "staticgpu"
+      - ["t4dws", "v100dws", "v100dws8"]
+    value: "t4dws"
   
   bc_num_hours:
     widget: number_field

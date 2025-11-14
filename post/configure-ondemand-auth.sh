@@ -68,7 +68,7 @@ passenger_min_instances: 1
 passenger_start_timeout: 600
 
 # host_regex: 'sc25worksh-(staticgpunodes|dynamicgpunodes|login)-[0-9]+'
-host_regex: 'sc25worksh-(t4dws|v100dws|login)-[0-9]+'
+host_regex: 'sc25worksh-(nst4dws|nsv100dws|nsv100dws8)-[0-9]+'
 node_uri: '/node'
 rnode_uri: '/rnode'
 EOF
