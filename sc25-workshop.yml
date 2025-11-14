@@ -161,9 +161,9 @@ deployment_groups:
     settings:
       machine_type: n1-standard-64
       disk_type: pd-standard
-      guest_accelerator:
-        - type: nvidia-tesla-v100
-          count: 4
+      # guest_accelerator:
+      #   - type: nvidia-tesla-v100
+      #     count: 4
       enable_login_public_ips: true
       instance_image:
         family: sc25-workshop-slurm
