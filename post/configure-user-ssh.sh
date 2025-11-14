@@ -51,7 +51,7 @@ cat > /etc/skel/example-job.sh <<'EOF'
 #SBATCH --output=output_%j.txt
 #SBATCH --ntasks=1
 #SBATCH --time=00:05:00
-#SBATCH --partition=staticgpu
+#SBATCH --partition=t4dws
 
 echo "Hello from Slurm!"
 echo "Job ID: $SLURM_JOB_ID"
