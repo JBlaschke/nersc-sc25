@@ -57,7 +57,7 @@ deployment_groups:
     source: community/modules/compute/schedmd-slurm-gcp-v6-nodeset
     use: [network]
     settings:
-      node_count_dynamic_max: 32
+      node_count_dynamic_max: 24
       node_count_static: 8
       disk_type: pd-standard
       machine_type: n1-standard-8
@@ -88,8 +88,8 @@ deployment_groups:
     source: community/modules/compute/schedmd-slurm-gcp-v6-nodeset
     use: [network]
     settings:
-      node_count_dynamic_max: 16
-      node_count_static: 8
+      node_count_dynamic_max: 4
+      node_count_static: 4
       disk_type: pd-standard
       machine_type: n1-standard-8
       guest_accelerator:
@@ -120,8 +120,8 @@ deployment_groups:
     source: community/modules/compute/schedmd-slurm-gcp-v6-nodeset
     use: [network]
     settings:
-      node_count_dynamic_max: 16
-      node_count_static: 8
+      node_count_dynamic_max: 2
+      node_count_static: 2
       disk_type: pd-standard
       machine_type: n1-standard-8
       guest_accelerator:
