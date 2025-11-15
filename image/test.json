@@ -1,0 +1,34 @@
+{
+    "builders": [
+        {
+            "type": "googlecompute",
+            "project_id": "consultant-poc",
+            "source_image_family": "slurm-gcp-6-11-ubuntu-2204-lts-nvidia-570",
+            "source_image_project_id" : "schedmd-slurm-public",
+            "ssh_username" : "jpblaschke",
+            "use_internal_ip" : "true",
+        "omit_external_ip" : "true",
+        "subnetwork" : "default",
+            "use_os_login" : "true",
+            "zone": "us-central1-b",
+            "image_name" : "demo-u2204-2",
+            "image_description" : "demo ubuntu 2204",
+            "disk_size" : 50,
+            "skip_create_image" : false
+        }
+    ],
+    "provisioners": [
+    {
+        "type": "file",
+        "source": "install-custom.sh",
+        "destination": "/tmp/install-custom.sh"
+    },
+        {
+            "type": "shell",
+            "max_retries": "3",
+            "inline":[
+                "sudo sh -x /tmp/install-custom.sh"
+            ]
+    }
+    ]
+}

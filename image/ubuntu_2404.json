@@ -1,0 +1,39 @@
+{
+    "variables": {
+        "project_id": "",
+        "ssh_username": "",
+        "zone": "us-central1-a"
+    },
+    "builders": [
+        {
+            "type": "googlecompute",
+            "project_id": "{{user `project_id`}}",
+            "source_image_family": "slurm-gcp-6-11-ubuntu-2404-lts-nvidia-570",
+            "source_image_project_id" : "schedmd-slurm-public",
+            "ssh_username" : "{{user `ssh_username`}}",
+            "use_internal_ip" : "true",
+            "omit_external_ip" : "true",
+            "subnetwork" : "default",
+            "use_os_login" : "true",
+            "zone": "{{user `zone`}}",
+            "image_name" : "sc25-u2404",
+            "image_description" : "Ubuntu 2404-based SC25 GCP Cluster Image",
+            "disk_size" : 50,
+            "skip_create_image" : false
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "./setup/install-software.sh",
+            "destination": "/deploy/stage/intall-software.sh"
+        },
+        {
+            "type": "shell",
+            "max_retries": "3",
+            "inline":[
+                "sudo sh -x /deploy/stage/intall-software.sh"
+            ]
+        }
+    ]
+}
