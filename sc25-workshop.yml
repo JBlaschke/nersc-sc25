@@ -5,29 +5,36 @@ vars:
   deployment_name: sc25-workshop
   region: us-central1
   zone: us-central1-a
+  instance_image:
+    name: sc25-r8-2
+    project: $(vars.project_id)
+    disk_size: 50
 
 deployment_groups:
-# Build custom image
-- group: packer
-  modules:
-  - id: custom_image
-    source: modules/packer/custom-image
-    kind: packer
-    settings:
-      source_image_family: slurm-gcp-6-11-hpc-rocky-linux-8
-      source_image_project_id: [schedmd-slurm-public]
-      image_family: sc25-workshop-slurm
-      disk_size: 50
-      zone: $(vars.zone)
-      # Use default VPC for building the image
-      subnetwork_name: default
-      omit_external_ip: false  # Need internet to download packages
-      # Don't use startup_script - it overwrites Slurm's
-      # Use shell_scripts instead (runs during Packer build only)
-      shell_scripts:
-        - $(ghpc_stage("./setup/install-software.sh"))
-        - $(ghpc_stage("./setup/configure-ondemand-cluster.sh"))
-        - $(ghpc_stage("./setup/create-users.sh"))
+# Custom image baking has been moved to packer. Packer uses exactly the same
+# scripts as the ones below, but packer allows us to version the images. --
+# uncomment this block to put it back in
+# # Build custom image
+# - group: packer
+#   modules:
+#   - id: custom_image
+#     source: modules/packer/custom-image
+#     kind: packer
+#     settings:
+#       source_image_family: slurm-gcp-6-11-hpc-rocky-linux-8
+#       source_image_project_id: [schedmd-slurm-public]
+#       image_family: sc25-workshop-slurm
+#       disk_size: 50
+#       zone: $(vars.zone)
+#       # Use default VPC for building the image
+#       subnetwork_name: default
+#       omit_external_ip: false  # Need internet to download packages
+#       # Don't use startup_script - it overwrites Slurm's
+#       # Use shell_scripts instead (runs during Packer build only)
+#       shell_scripts:
+#         - $(ghpc_stage("./setup/install-software.sh"))
+#         - $(ghpc_stage("./setup/configure-ondemand-cluster.sh"))
+#         - $(ghpc_stage("./setup/create-users.sh"))
 
 
 # Deploy cluster with custom image
