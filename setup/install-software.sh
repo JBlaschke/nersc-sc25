@@ -71,6 +71,7 @@ git clone https://github.com/JuliaParallel/DeploymentsOnHPC
 cd DeploymentsOnHPC
 
 # workaround to ensure that LMOD is initialized
+export MODULEPATH="/opt/apps/modulefiles"
 source /opt/apps/lmod/lmod/init/bash
 ml av
 
