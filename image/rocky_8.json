@@ -1,0 +1,70 @@
+{
+    "variables": {
+        "project_id": "",
+        "ssh_username": "",
+        "zone": "us-central1-a"
+    },
+    "builders": [
+        {
+            "type": "googlecompute",
+            "project_id": "{{user `project_id`}}",
+            "source_image_family": "slurm-gcp-6-11-hpc-rocky-linux-8",
+            "source_image_project_id" : "schedmd-slurm-public",
+            "ssh_username" : "{{user `ssh_username`}}",
+            "use_internal_ip" : "true",
+            "omit_external_ip" : "false",
+            "subnetwork" : "default",
+            "use_os_login" : "true",
+            "zone": "{{user `zone`}}",
+            "image_name" : "sc25-r8-2",
+            "image_description" : "Rocky v8 based SC25 GCP Cluster Image",
+            "disk_size" : 50,
+            "skip_create_image" : false
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "max_retries": "3",
+            "inline":[
+                "sudo mkdir -p /deploy/stage && sudo chmod o+rwx /deploy/stage"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "./setup/install-software.sh",
+            "destination": "/deploy/stage/install-software.sh"
+        },
+        {
+            "type": "file",
+            "source": "./setup/configure-ondemand-cluster.sh",
+            "destination": "/deploy/stage/configure-ondemand-cluster.sh"
+        },
+        {
+            "type": "file",
+            "source": "./setup/create-users.sh",
+            "destination": "/deploy/stage/create-users.sh"
+        },
+        {
+            "type": "shell",
+            "max_retries": "3",
+            "inline":[
+                "sudo bash -x /deploy/stage/install-software.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "max_retries": "3",
+            "inline":[
+                "sudo bash -x /deploy/stage/configure-ondemand-cluster.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "max_retries": "3",
+            "inline":[
+                "sudo bash -x /deploy/stage/create-users.sh"
+            ]
+        }
+    ]
+}
