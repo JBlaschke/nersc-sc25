@@ -93,9 +93,9 @@ attributes:
     min: 1
     max: 8
   
-  num_cores:
+  num_nodes:
     widget: number_field
-    label: "Number of cores"
+    label: "Number of nodes"
     value: 4
     min: 1
     max: 8
@@ -126,7 +126,7 @@ attributes:
 form:
   - partition
   - bc_num_hours
-  - num_cores
+  - num_nodes
   - num_gpus
   - mode
   - working_dir
@@ -145,8 +145,8 @@ script:
   native:
     - "-p"
     - "<%= partition %>"
-    - "-n"
-    - "<%= num_cores %>"
+    - "-N"
+    - "<%= num_nodes %>"
     - "-t"
     - "<%= bc_num_hours %>:00:00"
     - "--gpus-per-node=<%= num_gpus %>"
@@ -159,6 +159,8 @@ set -x
 
 # Use Jupyter from /deploy
 export PATH="/deploy/jupyter/venv/bin:${PATH}"
+# Add Jupyter hotfixes
+export JUPYTER_PATH=/opt/apps/jupyter
 
 # Set up config
 export JUPYTER_CONFIG_DIR="${HOME}/.jupyter"
