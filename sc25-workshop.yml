@@ -181,6 +181,7 @@ deployment_groups:
     - slurm_login
     settings:
       enable_controller_public_ips: true
-      instance_image:
-        family: sc25-workshop-slurm
-        project: $(vars.project_id)
+      # instance_image:
+      #   family: sc25-workshop-slurm
+      #   project: $(vars.project_id)
+      instance_image_custom: true
