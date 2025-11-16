@@ -96,9 +96,9 @@ attributes:
   num_nodes:
     widget: number_field
     label: "Number of nodes"
-    value: 4
+    value: 1
     min: 1
-    max: 8
+    max: 32
 
   num_gpus:
     widget: number_field
