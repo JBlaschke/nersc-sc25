@@ -68,7 +68,7 @@ cd /deploy
 git clone https://github.com/JBlaschke/nersc-sc25.git
 git clone https://github.com/JuliaParallel/DeploymentsOnHPC
 
-cd /DeploymentsOnHPC
+cd DeploymentsOnHPC
 make juliaup SITE=gcp MODE=global
 make julia   SITE=gcp MODE=global
 make kernels SITE=gcp MODE=global
