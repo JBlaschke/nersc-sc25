@@ -108,7 +108,6 @@ deployment_groups:
       dws_flex:
         enabled: true
         max_run_duration: 300000
-      instance_image_custom: true
       # zones: [us-central1-b, us-central1-c, us-central1-f]
       allow_automatic_updates: false
       # instance_image:
@@ -141,7 +140,6 @@ deployment_groups:
       dws_flex:
         enabled: true
         max_run_duration: 300000
-      instance_image_custom: true
       # zones: [us-central1-b, us-central1-c, us-central1-f]
       allow_automatic_updates: false
       # instance_image:
