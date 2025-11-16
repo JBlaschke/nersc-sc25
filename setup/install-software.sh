@@ -61,11 +61,16 @@ firewall-cmd --reload 2>/dev/null || true
 
 echo "Open OnDemand startup complete!"
 
-echo "Cloning Workshop Cluster Intrastructure Repo ..."
+echo "Deploying Workshop Software and Programming Environment ..."
 
 mkdir -p /deploy
 cd /deploy
 git clone https://github.com/JBlaschke/nersc-sc25.git
 git clone https://github.com/JuliaParallel/DeploymentsOnHPC
 
-echo "Cloning Repo complete!"
+cd /DeploymentsOnHPC
+make juliaup SITE=gcp MODE=global
+make julia   SITE=gcp MODE=global
+make kernels SITE=gcp MODE=global
+
+echo "Workshop Software And Programming Environment Successfull Deployed"
